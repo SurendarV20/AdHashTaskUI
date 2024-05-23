@@ -1,1 +1,26 @@
-<p>vehicle-list works!</p>
+<div class="row">
+  <div class="col-4"></div>
+  <div class="col-2">
+    <div class="input-group mt-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search..."
+        [(ngModel)]="query"
+        (input)="GetSearchResult()"
+      />
+    </div>
+  </div>
+
+  <div class="col-4"></div>
+</div>
+<div class="d-flex justify-content-center pt-5">
+  <ag-grid-angular
+    class="ag-theme-quartz"
+    [gridOptions]="gridOptions"
+    [rowData]="rows"
+    style="width: 80%; height: 500px"
+    (gridReady)="onGridReady($event)"
+  ></ag-grid-angular>
+</div>
+]

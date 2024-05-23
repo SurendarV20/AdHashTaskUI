@@ -1,32 +1,141 @@
 <div class="row">
   <div class="col-4 p-5">
-    <div>Make (1 selected)</div>
+    <div>Make ({{ makeSelected.length }} selected)</div>
     <ng-select
-      [items]="accounts"
-      bindLabel="name"
-      bindValue="name"
+      [items]="makes"
       [searchable]="false"
+      [multiple]="true"
+      [(ngModel)]="makeSelected"
+      (change)="onMakeSelectedChange($event)"
     >
     </ng-select>
   </div>
   <div class="col-4 p-5">
-    <div>Model (1 selected)</div>
+    <div>Model ({{ modelSelected.length }} selected)</div>
     <ng-select
-      [items]="accounts"
-      bindLabel="name"
-      bindValue="name"
+      [items]="models"
       [searchable]="false"
+      [multiple]="true"
+      [(ngModel)]="modelSelected"
+      (change)="onModelSelectedChange($event)"
     >
     </ng-select>
   </div>
   <div class="col-4 p-5">
-    <div>Year (1 selected)</div>
+    <div>Year ({{ yearSelected.length }} selected)</div>
     <ng-select
-      [items]="accounts"
-      bindLabel="name"
-      bindValue="name"
+      [items]="years"
       [searchable]="false"
+      [multiple]="true"
+      [(ngModel)]="yearSelected"
+      (change)="onYearSelectedChange($event)"
     >
     </ng-select>
+  </div>
+</div>
+<div class="row">
+  <div class="p-5 pt-1">Now select your trims</div>
+</div>
+<div class="row">
+  <div class="p-5 pt-1 col-3">
+    <input
+      type="checkbox"
+      [(ngModel)]="selectedAlltrims"
+      (change)="selectAlltrims()"
+    />
+    select all {{ this.filteredVehicleMakes.length }} your trims
+  </div>
+  <div class="col-3">
+    <input
+      type="text"
+      class="form-control"
+      (change)="onAllNotesChange($event)"
+      id="allNotes"
+      placeholder="Enter global notes here"
+      [(ngModel)]="allNotes"
+    />
+  </div>
+  <div class="col-3">
+    <button (click)="saveNotes()" class="btn btn-primary">Save Notes</button>
+  </div>
+
+  <div class="col-3">
+    <button (click)="onPreviewClick()" class="btn btn-primary">Preview</button>
+  </div>
+</div>
+<div class="row dynamicgrids">
+  <div class="col-10 p-5 pt-1">
+    <div
+      ngbAccordion
+      [closeOthers]="true"
+      (panelChange)="onAccordionPanelChange()"
+    >
+      @for (item of filteredVehicleMakes; track item) {
+      <div ngbAccordionItem [ngClass]="item.make">
+        <h2 ngbAccordionHeader>
+          <button ngbAccordionButton>
+            <div class="d-flex justify-content-center align-items-center">
+              <input
+                (change)="makeChkChange(item, $event)"
+                type="checkbox"
+                class="makeClass"
+                style="margin-right: 10px"
+              />
+              {{ item.make }}
+            </div>
+          </button>
+        </h2>
+        <div ngbAccordionCollapse>
+          <div ngbAccordionBody>
+            <ng-template>
+              <div class="container mt-4">
+                <table class="table table-bordered closed-border-table myTable">
+                  <thead>
+                    <tr>
+                      <th style="display: none">&nbsp;</th>
+                      <th>&nbsp;</th>
+                      <th>Trim</th>
+                      <th>Engine</th>
+                      <th>Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="
+                        let v of getVehiclesByMake(item.make);
+                        let i = index
+                      "
+                    >
+                      <td style="display: none">{{ v.vehicleDetailId }}</td>
+                      <td style="text-align: center">
+                        <input
+                          type="checkbox"
+                          [checked]="getVehichleChecked(item.make)"
+                          [id]="getRowId(v.vehicleDetailId)"
+                        />
+                      </td>
+                      <td>{{ v.trim }}</td>
+                      <td>{{ v.engine }}</td>
+                      <td>
+                        <div class="form-group">
+                          <input
+                            type="text"
+                            class="form-control"
+                            (change)="onNotesChange($event)"
+                            [value]="v.notes"
+                            [ngClass]="v.make"
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
   </div>
 </div>
